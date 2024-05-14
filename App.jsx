@@ -1,127 +1,93 @@
-import * as React from 'react';
-import { View,Text  } from 'react-native';
-import { Button ,ListItem,Tab,FAB,Rating,CheckBox,Switch,Text as RNText,Divider,Input ,SearchBar,SpeedDial } from '@rneui/themed';
-import { Icon } from '@rneui/themed';
+import React, { useState } from 'react';
+import { ThemeProvider } from 'styled-components/native';
+import styled from 'styled-components/native';
+import { View, Text, TouchableOpacity } from 'react-native';
+
+const lightTheme = {
+  colors: {
+    primary: '#3498db',
+    secondary: '#2ecc71',
+    background: '#ecf0f1',
+    text: '#2c3e50',
+  },
+  fonts: {
+    main: 'Arial',
+    bold: 'Arial-BoldMT',
+  },
+};
+
+// Dark Theme Tanımı
+const darkTheme = {
+  colors: {
+    primary: '#1abc9c',
+    secondary: '#9b59b6',
+    background: '#34495e',
+    text: '#ecf0f1',
+  },
+  fonts: {
+    main: 'Arial',
+    bold: 'Arial-BoldMT',
+  },
+};
+
+
 
 const App = () => {
-
-  const [open, setOpen] = React.useState(false);
-
-
-  const [search, setSearch] = React.useState("");
-
-const updateSearch = (search) => {
-  setSearch(search);
-};
-  const [visible, setVisible] = React.useState(true);
-  const [checked, setChecked] = React.useState(true);
-  const toggleCheckbox = () => setChecked(!checked);
-
-  const toggleSwitch = () => {
-    setChecked(!checked);
+  const [theme, setTheme] = useState(lightTheme);
+  
+  
+  const toggleTheme = () => {
+    setTheme(theme === lightTheme ? darkTheme : lightTheme);
   };
 
-
   return (
-
-
-    <View>
-
-<SearchBar
-      placeholder="Type Here..."
-      onChangeText={updateSearch}
-      value={search}
-    />
- <Input placeholder="Password" secureTextEntry={true} />
-<Input
-      placeholder='BASIC INPUT'
-    />
-      <Text>React Text</Text>
-      <Divider/>
-<RNText h1>Heading 1</RNText>
-  <RNText h2>Heading 2</RNText>
-  <RNText h3>Heading 3</RNText>
-  <RNText h4>Heading 4</RNText>
-
- <Switch
-      value={checked}
-      onValueChange={(value) => setChecked(value)}
-    />
-<CheckBox
-           checked={checked}
-           onPress={toggleCheckbox}
-           // Use ThemeProvider to make change for all checkbox
-           iconType="material-community"
-           checkedIcon="checkbox-marked"
-           uncheckedIcon="checkbox-blank-outline"
-           checkedColor="red"
-         />
-<Rating showRating fractions="{1}" startingValue="{3.3}" />
-
-
-
-
-<FAB
-        loading
-        visible={visible}
-        icon={{ name: 'add', color: 'white' }}
-        size="small"
-      />
-
-   
-
-      <Tab value={0} scrollable>
-  <Tab.Item
-    containerStyle={(active) => ({
-      backgroundColor: active ? "red" : undefined,
-    })}
-  >
-    Tab
-  </Tab.Item>
-  <Tab.Item
-    buttonStyle={(active) => ({
-      backgroundColor: active ? "red" : undefined,
-    })}
-  >
-    Tab
-  </Tab.Item>
-</Tab>
-
-
-   <ListItem>
-  <ListItem.Content>
-    <ListItem.Title>John Doe</ListItem.Title>
-    <ListItem.Subtitle>CEO, Example.com</ListItem.Subtitle>
-  </ListItem.Content>
-
-  <ListItem.Content>
-    <ListItem.Title>Jane Doe</ListItem.Title>
-    <ListItem.Subtitle>CEO of CEO, Example.com</ListItem.Subtitle>
-  </ListItem.Content>
-
-</ListItem>
-      <Button title="Solid" />
-      <SpeedDial
-    isOpen={open}
-    icon={{ name: 'edit', color: '#fff' }}
-    openIcon={{ name: 'close', color: '#fff' }}
-    onOpen={() => setOpen(!open)}
-    onClose={() => setOpen(!open)}
-  >
-    <SpeedDial.Action
-      icon={{ name: 'add', color: '#fff' }}
-      title="Add"
-      onPress={() => console.log('Add Something')}
-    />
-    <SpeedDial.Action
-      icon={{ name: 'delete', color: '#fff' }}
-      title="Delete"
-      onPress={() => console.log('Delete Something')}
-    />
-  </SpeedDial>
-    </View>
-
+    <ThemeProvider theme={theme}>
+    <Container>
+      <ThemedText>Welcome to Themed App</ThemedText>
+      <ThemedButton>
+        <ButtonText>Primary Button</ButtonText>
+      </ThemedButton>
+      <DangerButton>
+        <ButtonText>Secondary Button</ButtonText>
+      </DangerButton>
+      <ThemedButton onPress={toggleTheme}>
+        <ButtonText>Toggle Theme</ButtonText>
+      </ThemedButton>
+    </Container>
+  </ThemeProvider>
   );
 };
+
+// Temalı Bileşenler
+const Container = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: ${props => props.theme.colors.background};
+`;
+
+const ThemedText = styled.Text`
+  font-size: 20px;
+  color: ${props => props.theme.colors.text};
+  font-family: ${props => props.theme.fonts.main};
+`;
+
+const ThemedButton = styled.TouchableOpacity`
+  padding: 10px 20px;
+  background-color: ${props => props.theme.colors.primary};
+  border-radius: 5px;
+  margin-top: 20px;
+`;
+
+const ButtonText = styled.Text`
+  font-size: 18px;
+  color: white;
+  font-family: ${props => props.theme.fonts.bold};
+`;
+
+const DangerButton = styled(ThemedButton)`
+  background-color: ${props => props.theme.colors.secondary};
+`;
+
 
 export default App;
